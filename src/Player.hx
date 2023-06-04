@@ -2,7 +2,6 @@ import ceramic.Assets;
 import ceramic.InputMap;
 import ceramic.KeyCode as K;
 import ceramic.Quad;
-import ceramic.Sprite;
 import ceramic.SpriteSheet;
 import ceramic.StateMachine;
 
@@ -26,11 +25,14 @@ enum abstract PlayerInput(Int) {
 	var UP;
 }
 
-class Player extends Sprite {
+class Player extends TaggedSprite {
 	var inputMap = new InputMap<PlayerInput>();
 	var moveSpeed:Float = 120;
 	var scaleFactor:Float = 2;
-	var mainWeapon:Sword;
+	var scene:MainScene;
+
+	public var mainWeapon:Sword;
+
 	var center:Quad;
 
 	/**
@@ -43,8 +45,9 @@ class Player extends Sprite {
 	 */
 	@component var machine = new StateMachine<PlayerState>();
 
-	public function new(assets:Assets) {
-		super();
+	public function new(assets:Assets, scene:MainScene) {
+		super([Tags.Player]);
+		this.scene = scene;
 
 		initArcadePhysics();
 
@@ -74,11 +77,20 @@ class Player extends Sprite {
 		center = new Quad();
 
 		initMainWeapon(assets);
+
+		onCollide(this, (v1, v2) -> {
+			trace('player colliding');
+		});
 	}
 
 	function initMainWeapon(assets:Assets) {
-		mainWeapon = new Sword(assets);
+		mainWeapon = new Sword(assets, this.scene);
+		mainWeapon.id = 'sword';
 		center.add(mainWeapon);
+
+		center.childWithId('sword').onCollide(this, (v1, v2) -> {
+			trace('sword colliding');
+		});
 	}
 
 	function bindInput() {
