@@ -1,6 +1,7 @@
 import ceramic.Assets;
 import ceramic.InputMap;
 import ceramic.KeyCode as K;
+import ceramic.Quad;
 import ceramic.Sprite;
 import ceramic.SpriteSheet;
 import ceramic.StateMachine;
@@ -29,6 +30,8 @@ class Player extends Sprite {
 	var inputMap = new InputMap<PlayerInput>();
 	var moveSpeed:Float = 120;
 	var scaleFactor:Float = 2;
+	var mainWeapon:Sword;
+	var center:Quad;
 
 	/**
 	 * A state machine plugged as a `Component` to `Player` using `PlayerState`
@@ -54,7 +57,7 @@ class Player extends Sprite {
 		sheet.addGridAnimation('idle', [4, 5, 6, 7], 0.1);
 		sheet.addGridAnimation('run', [8, 9, 10, 11], 0.1);
 
-		anchor(0.5, 1);
+		anchor(0.5, 0.5);
 
 		quad.roundTranslation = 1;
 
@@ -68,12 +71,14 @@ class Player extends Sprite {
 
 		bindInput();
 
+		center = new Quad();
+
 		initMainWeapon(assets);
 	}
 
 	function initMainWeapon(assets:Assets) {
-		var weapon = new Sword(assets);
-		add(weapon);
+		mainWeapon = new Sword(assets);
+		center.add(mainWeapon);
 	}
 
 	function bindInput() {
@@ -105,18 +110,17 @@ class Player extends Sprite {
 	}
 
 	function DEFAULT_update(dt:Float) {
+		center.pos(x, y);
 		handleInput(dt);
 	}
 
 	function handleInput(dt:Float) {
 		if (inputMap.pressed(PlayerInput.RIGHT)) {
 			velocityX = moveSpeed;
-			scaleX = scaleFactor;
 		}
 
 		if (inputMap.pressed(PlayerInput.LEFT)) {
 			velocityX = -moveSpeed;
-			scaleX = -scaleFactor;
 		}
 
 		if (inputMap.pressed(PlayerInput.UP)) {
@@ -154,5 +158,9 @@ class Player extends Sprite {
 
 		x += velocityX * dt;
 		y += velocityY * dt;
+
+		if (velocityX != 0) {
+			scaleX = velocityX > 0 ? scaleFactor : -scaleFactor;
+		}
 	}
 }

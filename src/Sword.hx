@@ -14,9 +14,7 @@ class Sword extends Sprite {
 		sheet.addGridAnimation('default', [0], 0);
 		animation = 'default';
 
-		anchor(0.5, 1);
-
-		quad.roundTranslation = 1;
+		anchor(0, 2);
 
 		scale(2);
 
@@ -24,6 +22,7 @@ class Sword extends Sprite {
 	}
 
 	override function update(dt:Float) {
+		rotation += 360 * dt / 3;
 		super.update(dt);
 	}
 }
