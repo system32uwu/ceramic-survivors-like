@@ -8,10 +8,12 @@ class MainScene extends Scene {
 	override function preload() {
 		// Add any asset you want to load here
 		assets.add(Images.HERO);
+		assets.add(Images.PIRATE_MAIN_WEAPON);
 	}
 
 	override function create() {
 		assets.texture(Images.HERO).filter = NEAREST;
+		assets.texture(Images.PIRATE_MAIN_WEAPON).filter = NEAREST;
 
 		initPlayer();
 	}

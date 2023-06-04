@@ -23,11 +23,12 @@ enum abstract PlayerInput(Int) {
 	var LEFT;
 	var DOWN;
 	var UP;
-	var JUMP;
 }
 
 class Player extends Sprite {
 	var inputMap = new InputMap<PlayerInput>();
+	var moveSpeed:Float = 120;
+	var scaleFactor:Float = 2;
 
 	/**
 	 * A state machine plugged as a `Component` to `Player` using `PlayerState`
@@ -66,6 +67,13 @@ class Player extends Sprite {
 		gravity(0, 0);
 
 		bindInput();
+
+		initMainWeapon(assets);
+	}
+
+	function initMainWeapon(assets:Assets) {
+		var weapon = new Sword(assets);
+		add(weapon);
 	}
 
 	function bindInput() {
@@ -73,6 +81,22 @@ class Player extends Sprite {
 		inputMap.bindKeyCode(PlayerInput.LEFT, K.LEFT);
 		inputMap.bindKeyCode(PlayerInput.DOWN, K.DOWN);
 		inputMap.bindKeyCode(PlayerInput.UP, K.UP);
+
+		// We use scan code for these so that it
+		// will work with non-qwerty layouts as well
+		inputMap.bindScanCode(PlayerInput.RIGHT, KEY_D);
+		inputMap.bindScanCode(PlayerInput.LEFT, KEY_A);
+		inputMap.bindScanCode(PlayerInput.DOWN, KEY_S);
+		inputMap.bindScanCode(PlayerInput.UP, KEY_W);
+
+		inputMap.bindGamepadAxisToButton(PlayerInput.RIGHT, LEFT_X, 0.25);
+		inputMap.bindGamepadAxisToButton(PlayerInput.LEFT, LEFT_X, -0.25);
+		inputMap.bindGamepadAxisToButton(PlayerInput.DOWN, LEFT_Y, 0.25);
+		inputMap.bindGamepadAxisToButton(PlayerInput.UP, LEFT_Y, -0.25);
+		inputMap.bindGamepadButton(PlayerInput.RIGHT, DPAD_RIGHT);
+		inputMap.bindGamepadButton(PlayerInput.LEFT, DPAD_LEFT);
+		inputMap.bindGamepadButton(PlayerInput.DOWN, DPAD_DOWN);
+		inputMap.bindGamepadButton(PlayerInput.UP, DPAD_UP);
 	}
 
 	override function update(dt:Float) {
@@ -86,21 +110,21 @@ class Player extends Sprite {
 
 	function handleInput(dt:Float) {
 		if (inputMap.pressed(PlayerInput.RIGHT)) {
-			velocityX = 120;
-			scaleX = 2;
+			velocityX = moveSpeed;
+			scaleX = scaleFactor;
 		}
 
 		if (inputMap.pressed(PlayerInput.LEFT)) {
-			velocityX = -120;
-			scaleX = -2;
+			velocityX = -moveSpeed;
+			scaleX = -scaleFactor;
 		}
 
 		if (inputMap.pressed(PlayerInput.UP)) {
-			velocityY = -120;
+			velocityY = -moveSpeed;
 		}
 
 		if (inputMap.pressed(PlayerInput.DOWN)) {
-			velocityY = 120;
+			velocityY = moveSpeed;
 		}
 
 		if (!inputMap.pressed(PlayerInput.RIGHT) && !inputMap.pressed(PlayerInput.LEFT)) {
