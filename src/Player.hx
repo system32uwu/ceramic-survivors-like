@@ -49,9 +49,9 @@ class Player extends TaggedSprite {
 		super([Tags.Player]);
 		this.scene = scene;
 
-		initArcadePhysics();
+		// initArcadePhysics();
 
-		body.collideWorldBounds = true;
+		// body.collideWorldBounds = true;
 
 		sheet = new SpriteSheet();
 		sheet.texture = assets.texture(Images.HERO);
@@ -70,7 +70,7 @@ class Player extends TaggedSprite {
 
 		scale(2);
 
-		gravity(0, 0);
+		// gravity(0, 0);
 
 		bindInput();
 
@@ -78,9 +78,9 @@ class Player extends TaggedSprite {
 
 		initMainWeapon(assets);
 
-		onCollide(this, (v1, v2) -> {
-			trace('player colliding');
-		});
+		// onCollide(this, (v1, v2) -> {
+		// 	trace('player colliding');
+		// });
 	}
 
 	function initMainWeapon(assets:Assets) {
@@ -88,9 +88,9 @@ class Player extends TaggedSprite {
 		mainWeapon.id = 'sword';
 		center.add(mainWeapon);
 
-		center.childWithId('sword').onCollide(this, (v1, v2) -> {
-			trace('sword colliding');
-		});
+		// center.childWithId('sword').onCollide(this, (v1, v2) -> {
+		// 	trace('sword colliding');
+		// });
 	}
 
 	function bindInput() {
@@ -128,51 +128,51 @@ class Player extends TaggedSprite {
 
 	function handleInput(dt:Float) {
 		if (inputMap.pressed(PlayerInput.RIGHT)) {
-			velocityX = moveSpeed;
+			// velocityX = moveSpeed;
 		}
 
 		if (inputMap.pressed(PlayerInput.LEFT)) {
-			velocityX = -moveSpeed;
+			// velocityX = -moveSpeed;
 		}
 
 		if (inputMap.pressed(PlayerInput.UP)) {
-			velocityY = -moveSpeed;
+			// velocityY = -moveSpeed;
 		}
 
 		if (inputMap.pressed(PlayerInput.DOWN)) {
-			velocityY = moveSpeed;
+			// velocityY = moveSpeed;
 		}
 
 		if (!inputMap.pressed(PlayerInput.RIGHT) && !inputMap.pressed(PlayerInput.LEFT)) {
-			velocityX = 0;
+			// velocityX = 0;
 		}
 
 		if (!inputMap.pressed(PlayerInput.UP) && !inputMap.pressed(PlayerInput.DOWN)) {
-			velocityY = 0;
+			// velocityY = 0;
 		}
 
 		handleMovement(dt);
 	}
 
 	function handleMovement(dt:Float) {
-		if (velocityX != 0 || velocityY != 0) {
-			animation = 'run';
-		} else {
-			animation = 'idle';
-		}
+		// if (velocityX != 0 || velocityY != 0) {
+		// 	animation = 'run';
+		// } else {
+		// 	animation = 'idle';
+		// }
 
-		// if the player moves in both directions, we divide the speed by 1.4
-		// to avoid going too fast
-		if (velocityX != 0 && velocityY != 0) {
-			velocityX /= 1.4;
-			velocityY /= 1.4;
-		}
+		// // if the player moves in both directions, we divide the speed by 1.4
+		// // to avoid going too fast
+		// if (velocityX != 0 && velocityY != 0) {
+		// 	velocityX /= 1.4;
+		// 	velocityY /= 1.4;
+		// }
 
-		x += velocityX * dt;
-		y += velocityY * dt;
+		// x += velocityX * dt;
+		// y += velocityY * dt;
 
-		if (velocityX != 0) {
-			scaleX = velocityX > 0 ? scaleFactor : -scaleFactor;
-		}
+		// if (velocityX != 0) {
+		// 	scaleX = velocityX > 0 ? scaleFactor : -scaleFactor;
+		// }
 	}
 }

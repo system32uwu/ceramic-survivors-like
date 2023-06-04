@@ -10,10 +10,10 @@ app:
         # Uncomment plugins you want to enable
 
         # Arcade physics
-        - arcade
+        # - arcade
 
         # Nape physics
-        #- nape
+        - nape
 
         # Support of .ase/.aseprite files
         #- ase

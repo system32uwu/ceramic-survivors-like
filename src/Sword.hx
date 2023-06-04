@@ -1,5 +1,4 @@
 import ceramic.Assets;
-import ceramic.Color;
 import ceramic.Quad;
 import ceramic.SpriteSheet;
 
@@ -17,18 +16,18 @@ class Sword extends TaggedSprite {
 		sheet.addGridAnimation('default', [0], 0);
 		animation = 'default';
 
-		initArcadePhysics();
+		// initArcadePhysics();
 
 		anchor(0, 2);
 
 		scale(2);
 
-		gravity(0, 0);
+		// gravity(0, 0);
 
-		onCollide(this, (v1, v2) -> {
-			trace('collide sword');
-			trace('--');
-		});
+		// onCollide(this, (v1, v2) -> {
+		// 	trace('collide sword');
+		// 	trace('--');
+		// });
 	}
 
 	override function update(dt:Float) {

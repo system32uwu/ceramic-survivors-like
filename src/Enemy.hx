@@ -4,7 +4,7 @@ import ceramic.SpriteSheet;
 class Enemy extends TaggedSprite {
 	public function new(assets:Assets) {
 		super([Tags.Enemy]);
-		initArcadePhysics();
+		// initArcadePhysics();
 
 		sheet = new SpriteSheet();
 		sheet.texture = assets.texture(Images.ENEMY_1);
@@ -23,7 +23,7 @@ class Enemy extends TaggedSprite {
 
 		scale(2);
 
-		gravity(0, 0);
+		// gravity(0, 0);
 	}
 
 	override function update(dt:Float) {
