@@ -1,10 +1,10 @@
 import ceramic.Assets;
-import ceramic.Quad;
 import ceramic.SpriteSheet;
+import nape.geom.Vec2;
 
 class Sword extends TaggedSprite {
 	var scene:MainScene;
-	var collider:Quad;
+	final center:Vec2 = new Vec2(0, 0);
 
 	public function new(assets:Assets, scene:MainScene) {
 		super([Tags.PlayerWeapon]);
@@ -15,23 +15,18 @@ class Sword extends TaggedSprite {
 		sheet.grid(9, 31);
 		sheet.addGridAnimation('default', [0], 0);
 		animation = 'default';
-
-		// initArcadePhysics();
+		quad.roundTranslation = 1;
 
 		anchor(0, 2);
 
 		scale(2);
-
-		// gravity(0, 0);
-
-		// onCollide(this, (v1, v2) -> {
-		// 	trace('collide sword');
-		// 	trace('--');
-		// });
 	}
 
 	override function update(dt:Float) {
-		rotation += 360 * dt / 3;
+		nape.body.rotate(center, 360 * dt / 300);
+
+		// trace(nape.body.rotation);
+		trace(nape.body.position);
 		super.update(dt);
 	}
 }

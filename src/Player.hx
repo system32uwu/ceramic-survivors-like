@@ -31,6 +31,9 @@ class Player extends TaggedSprite {
 	var scaleFactor:Float = 2;
 	var scene:MainScene;
 
+	var velocityX:Float = 0;
+	var velocityY:Float = 0;
+
 	public var mainWeapon:Sword;
 
 	var center:Quad;
@@ -77,20 +80,12 @@ class Player extends TaggedSprite {
 		center = new Quad();
 
 		initMainWeapon(assets);
-
-		// onCollide(this, (v1, v2) -> {
-		// 	trace('player colliding');
-		// });
 	}
 
 	function initMainWeapon(assets:Assets) {
 		mainWeapon = new Sword(assets, this.scene);
 		mainWeapon.id = 'sword';
 		center.add(mainWeapon);
-
-		// center.childWithId('sword').onCollide(this, (v1, v2) -> {
-		// 	trace('sword colliding');
-		// });
 	}
 
 	function bindInput() {
@@ -128,51 +123,50 @@ class Player extends TaggedSprite {
 
 	function handleInput(dt:Float) {
 		if (inputMap.pressed(PlayerInput.RIGHT)) {
-			// velocityX = moveSpeed;
+			velocityX = moveSpeed;
 		}
 
 		if (inputMap.pressed(PlayerInput.LEFT)) {
-			// velocityX = -moveSpeed;
+			velocityX = -moveSpeed;
 		}
 
 		if (inputMap.pressed(PlayerInput.UP)) {
-			// velocityY = -moveSpeed;
+			velocityY = -moveSpeed;
 		}
 
 		if (inputMap.pressed(PlayerInput.DOWN)) {
-			// velocityY = moveSpeed;
+			velocityY = moveSpeed;
 		}
 
 		if (!inputMap.pressed(PlayerInput.RIGHT) && !inputMap.pressed(PlayerInput.LEFT)) {
-			// velocityX = 0;
+			velocityX = 0;
 		}
 
 		if (!inputMap.pressed(PlayerInput.UP) && !inputMap.pressed(PlayerInput.DOWN)) {
-			// velocityY = 0;
+			velocityY = 0;
 		}
 
 		handleMovement(dt);
 	}
 
 	function handleMovement(dt:Float) {
-		// if (velocityX != 0 || velocityY != 0) {
-		// 	animation = 'run';
-		// } else {
-		// 	animation = 'idle';
-		// }
+		if (velocityX != 0 || velocityY != 0) {
+			animation = 'run';
+		} else {
+			animation = 'idle';
+		}
 
-		// // if the player moves in both directions, we divide the speed by 1.4
-		// // to avoid going too fast
-		// if (velocityX != 0 && velocityY != 0) {
-		// 	velocityX /= 1.4;
-		// 	velocityY /= 1.4;
-		// }
+		// if the player moves in both directions, we divide the speed by 1.4
+		// to avoid going too fast
+		if (velocityX != 0 && velocityY != 0) {
+			velocityX /= 1.4;
+			velocityY /= 1.4;
+		}
 
-		// x += velocityX * dt;
-		// y += velocityY * dt;
+		nape.body.position.setxy(x + velocityX * dt, y + velocityY * dt);
 
-		// if (velocityX != 0) {
-		// 	scaleX = velocityX > 0 ? scaleFactor : -scaleFactor;
-		// }
+		if (velocityX != 0) {
+			scaleX = velocityX > 0 ? scaleFactor : -scaleFactor;
+		}
 	}
 }
