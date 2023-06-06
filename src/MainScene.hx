@@ -42,6 +42,6 @@ class MainScene extends Scene {
 		super.update(dt);
 
 		arcade.world.collide(player, enemies);
-		// arcade.world.collide(player.mainWeapon.childWithId('swordcollider'), enemies);
+		arcade.world.collide(player.mainWeapon, enemies);
 	}
 }

@@ -1,9 +1,10 @@
 import ceramic.Assets;
+import ceramic.Color;
 import ceramic.SpriteSheet;
 
 class Enemy extends TaggedSprite {
 	public function new(assets:Assets) {
-		super([Tags.Enemy]);
+		super([Tags.Enemy], 3, 0);
 		initArcadePhysics();
 
 		sheet = new SpriteSheet();
@@ -24,6 +25,26 @@ class Enemy extends TaggedSprite {
 		scale(2);
 
 		gravity(0, 0);
+
+		autoComputeSize = true;
+	}
+
+	public function takeDamange(fromMainWeapon:Bool, damage:Float) {
+		var hit = this.health.takeDamage(fromMainWeapon, damage);
+
+		if (hit) {
+			this.tween(QUAD_EASE_IN, 1, 0, 1, (v1, v2) -> {
+				if (v1 < 1) {
+					this.quad.color = Color.RED;
+				} else {
+					this.quad.color = Color.WHITE;
+				}
+			});
+
+			if (this.health.isDead()) {
+				this.destroy();
+			}
+		}
 	}
 
 	override function update(dt:Float) {
