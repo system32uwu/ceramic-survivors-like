@@ -3,7 +3,6 @@ package characters;
 import ceramic.Assets;
 import ceramic.InputMap;
 import ceramic.KeyCode as K;
-import ceramic.Quad;
 import ceramic.SpriteSheet;
 import ceramic.StateMachine;
 import game_utils.*;
@@ -47,8 +46,8 @@ class Player extends TaggedSprite {
 	 */
 	@component var machine = new StateMachine<PlayerState>();
 
-	public function new(assets:Assets, scene:MainScene) {
-		super([Tags.Player], 10, 0);
+	public function new(assets:Assets, scene:MainScene, debug:Bool = false) {
+		super([Tags.Player], 10, 0, debug);
 		this.scene = scene;
 
 		initArcadePhysics();

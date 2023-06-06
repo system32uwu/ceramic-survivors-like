@@ -7,8 +7,8 @@ import game_utils.TaggedSprite;
 import game_utils.Tags;
 
 class Enemy extends TaggedSprite {
-	public function new(assets:Assets) {
-		super([Tags.Enemy], 3, 0, true);
+	public function new(assets:Assets, debug:Bool = false) {
+		super([Tags.Enemy], 3, 0, debug);
 		initArcadePhysics();
 
 		sheet = new SpriteSheet();

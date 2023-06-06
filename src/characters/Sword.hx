@@ -9,8 +9,8 @@ class Sword extends TaggedSprite {
 
 	// var collider:Quad;
 
-	public function new(assets:Assets, rotator:RotatorCenter) {
-		super([Tags.PlayerWeapon], 0, 1, true);
+	public function new(assets:Assets, rotator:RotatorCenter, debug:Bool = false) {
+		super([Tags.PlayerWeapon], 0, 1, debug);
 		this.rotator = rotator;
 
 		sheet = new SpriteSheet();
