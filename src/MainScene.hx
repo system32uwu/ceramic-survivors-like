@@ -64,10 +64,4 @@ class MainScene extends Scene {
 		arcade.world.collide(player, enemies);
 		arcade.world.collide(player.mainWeapon, enemies);
 	}
-
-	public function destroyEnemy(enemy:Enemy) {
-		enemy.clearComponents();
-		enemies.remove(enemy);
-		enemy.dispose();
-	}
 }

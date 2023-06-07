@@ -34,7 +34,7 @@ class Sword extends TaggedSprite {
 				var wasHit = enemy.takeDamange(true, this.damage.value);
 
 				if (wasHit && enemy.health.isDead()) {
-					scene.destroyEnemy(enemy);
+					enemy.dispose();
 				}
 			}
 		});
