@@ -61,7 +61,7 @@ class Enemy extends TaggedSprite {
 		randomYSpeed = (Math.random() + 1 * maxYSpeed);
 	}
 
-	public function takeDamange(fromMainWeapon:Bool, damage:Float) {
+	public function takeDamage(fromMainWeapon:Bool, damage:Float) {
 		var hit = this.health.takeDamage(fromMainWeapon, damage);
 
 		if (hit) {
