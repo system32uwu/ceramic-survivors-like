@@ -13,6 +13,7 @@ class MainScene extends Scene {
 		assets.add(Images.HERO);
 		assets.add(Images.PIRATE_MAIN_WEAPON);
 		assets.add(Images.ENEMY_1);
+		assets.add(Images.ENEMY_1V_2);
 	}
 
 	public function restart() {
@@ -28,6 +29,7 @@ class MainScene extends Scene {
 		assets.texture(Images.HERO).filter = NEAREST;
 		assets.texture(Images.PIRATE_MAIN_WEAPON).filter = NEAREST;
 		assets.texture(Images.ENEMY_1).filter = NEAREST;
+		assets.texture(Images.ENEMY_1V_2).filter = NEAREST;
 
 		initArcadePhysics();
 
@@ -38,11 +40,15 @@ class MainScene extends Scene {
 		initPlayer();
 
 		enemies = new Group<Enemy>();
-		var enemy = new Enemy(assets);
-		enemy.x = width / 2 - 5;
-		enemy.y = player.y - 50;
+		for (i in 0...20) {
+			var xNegate = Math.random() > 0.5 ? 1 : -1;
+			var yNegate = Math.random() > 0.5 ? 1 : -1;
 
-		enemies.add(enemy);
+			var enemy = new Enemy(assets, this.player);
+			enemy.x = width / 2 - 5 * i * xNegate;
+			enemy.y = player.y - 50 * i * yNegate;
+			enemies.add(enemy);
+		}
 	}
 
 	function initPlayer() {
@@ -57,5 +63,11 @@ class MainScene extends Scene {
 
 		arcade.world.collide(player, enemies);
 		arcade.world.collide(player.mainWeapon, enemies);
+	}
+
+	public function destroyEnemy(enemy:Enemy) {
+		enemy.clearComponents();
+		enemies.remove(enemy);
+		enemy.destroy();
 	}
 }

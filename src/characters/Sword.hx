@@ -9,7 +9,7 @@ class Sword extends TaggedSprite {
 
 	// var collider:Quad;
 
-	public function new(assets:Assets, rotator:RotatorCenter, debug:Bool = false) {
+	public function new(assets:Assets, rotator:RotatorCenter, scene:MainScene, debug:Bool = false) {
 		super([Tags.PlayerWeapon], 0, 1, debug);
 		this.rotator = rotator;
 
@@ -28,14 +28,20 @@ class Sword extends TaggedSprite {
 		size(14, 20);
 
 		onCollide(this, (v1, v2) -> {
-			log.debug('collide ${v1}, ${v2}');
+			// log.debug('collide ${v1}, ${v2}');
 
 			if (v2 is Enemy) {
 				var enemy:Enemy = cast v2;
 
-				enemy.takeDamange(true, this.damage.value);
+				var was_hit = enemy.takeDamange(true, this.damage.value);
+
+				if (was_hit && enemy.health.isDead()) {
+					scene.destroyEnemy(enemy);
+				}
 			}
 		});
+
+		depth = 100;
 	}
 
 	override function update(dt:Float) {

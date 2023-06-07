@@ -34,8 +34,6 @@ class HealthComponent extends Entity implements Component {
 		this.health -= damage;
 		this.lastHitWithMainWeapon = Timer.now;
 
-		trace("health: " + this.health);
-
 		return true;
 	}
 
