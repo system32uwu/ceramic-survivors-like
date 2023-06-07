@@ -68,6 +68,6 @@ class MainScene extends Scene {
 	public function destroyEnemy(enemy:Enemy) {
 		enemy.clearComponents();
 		enemies.remove(enemy);
-		enemy.destroy();
+		enemy.dispose();
 	}
 }

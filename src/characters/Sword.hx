@@ -28,14 +28,12 @@ class Sword extends TaggedSprite {
 		size(14, 20);
 
 		onCollide(this, (v1, v2) -> {
-			// log.debug('collide ${v1}, ${v2}');
-
 			if (v2 is Enemy) {
 				var enemy:Enemy = cast v2;
 
-				var was_hit = enemy.takeDamange(true, this.damage.value);
+				var wasHit = enemy.takeDamange(true, this.damage.value);
 
-				if (was_hit && enemy.health.isDead()) {
+				if (wasHit && enemy.health.isDead()) {
 					scene.destroyEnemy(enemy);
 				}
 			}
