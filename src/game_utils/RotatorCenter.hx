@@ -1,9 +1,11 @@
+package game_utils;
+
 import ceramic.Sprite;
 
 class RotatorCenter extends Sprite {
-	var player:Player;
+	var player:Sprite;
 
-	public function new(player:Player) {
+	public function new(player:Sprite) {
 		super();
 
 		this.player = player;

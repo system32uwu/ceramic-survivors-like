@@ -3,9 +3,16 @@ package;
 import ceramic.Color;
 import ceramic.Entity;
 import ceramic.InitSettings;
+import ceramic.InputMap;
 import ceramic.PixelArt;
 
+enum abstract ProjectInput(Int) {
+	var RESTART;
+}
+
 class Project extends Entity {
+	var inputMap = new InputMap<ProjectInput>();
+
 	function new(settings:InitSettings) {
 		super();
 
@@ -15,6 +22,7 @@ class Project extends Entity {
 		settings.targetHeight = 480;
 		settings.scaling = FIT;
 		settings.resizable = true;
+		settings.fullscreen = false;
 
 		app.onceReady(this, ready);
 	}
@@ -23,6 +31,22 @@ class Project extends Entity {
 		setupResolution();
 		// Set MainScene as the current scene (see MainScene.hx)
 		app.scenes.main = new MainScene();
+
+		bindInput();
+	}
+
+	function bindInput() {
+		inputMap.bindKeyCode(ProjectInput.RESTART, KEY_R);
+		// We use scan code for these so that it
+		// will work with non-qwerty layouts as well
+		inputMap.bindScanCode(ProjectInput.RESTART, KEY_R);
+		inputMap.bindGamepadButton(ProjectInput.RESTART, START);
+		inputMap.onKeyDown(this, (k) -> {
+			if (k == ProjectInput.RESTART) {
+				var scene:MainScene = cast app.scenes.main;
+				scene.restart();
+			}
+		});
 	}
 
 	function setupResolution() {

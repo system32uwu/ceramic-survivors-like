@@ -2,17 +2,26 @@ package;
 
 import ceramic.Group;
 import ceramic.Scene;
+import characters.*;
 
 class MainScene extends Scene {
 	var player:Player;
 
-	public var enemies:Group<Enemy> = new Group<Enemy>();
+	public var enemies:Group<Enemy>;
 
 	override function preload() {
-		// Add any asset you want to load here
 		assets.add(Images.HERO);
 		assets.add(Images.PIRATE_MAIN_WEAPON);
 		assets.add(Images.ENEMY_1);
+	}
+
+	public function restart() {
+		player.mainWeapon.destroy();
+		player.inputMap.unbindEvents();
+		player.destroy();
+		enemies.destroy();
+
+		start();
 	}
 
 	override function create() {
@@ -22,8 +31,13 @@ class MainScene extends Scene {
 
 		initArcadePhysics();
 
+		start();
+	}
+
+	function start() {
 		initPlayer();
 
+		enemies = new Group<Enemy>();
 		var enemy = new Enemy(assets);
 		enemy.x = width / 2 - 5;
 		enemy.y = player.y - 50;

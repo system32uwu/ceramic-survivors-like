@@ -1,10 +1,14 @@
+package characters;
+
 import ceramic.Assets;
 import ceramic.Color;
 import ceramic.SpriteSheet;
+import game_utils.TaggedSprite;
+import game_utils.Tags;
 
 class Enemy extends TaggedSprite {
 	public function new(assets:Assets) {
-		super([Tags.Enemy], 3, 0);
+		super([Tags.Enemy], 3, 0, true);
 		initArcadePhysics();
 
 		sheet = new SpriteSheet();
@@ -14,19 +18,15 @@ class Enemy extends TaggedSprite {
 		sheet.addGridAnimation('idle', [4, 5, 6, 7], 0.1);
 		sheet.addGridAnimation('run', [8, 9, 10, 11], 0.1);
 
-		anchor(0.5, 0.5);
-
 		quad.roundTranslation = 1;
 
 		animation = 'idle';
 
-		anchor(0, 2);
-
-		scale(2);
+		anchor(0.5, 0.5);
 
 		gravity(0, 0);
 
-		autoComputeSize = true;
+		// size(24, 24);
 	}
 
 	public function takeDamange(fromMainWeapon:Bool, damage:Float) {

@@ -1,9 +1,12 @@
+package characters;
+
 import ceramic.Assets;
 import ceramic.InputMap;
 import ceramic.KeyCode as K;
 import ceramic.Quad;
 import ceramic.SpriteSheet;
 import ceramic.StateMachine;
+import game_utils.*;
 
 /**
  * The different states the player can have.
@@ -26,15 +29,13 @@ enum abstract PlayerInput(Int) {
 }
 
 class Player extends TaggedSprite {
-	var inputMap = new InputMap<PlayerInput>();
+	public var inputMap = new InputMap<PlayerInput>();
+
 	var moveSpeed:Float = 120;
-	var scaleFactor:Float = 2;
 	var scene:MainScene;
 	var rotatorCenter:RotatorCenter;
 
 	public var mainWeapon:Sword;
-
-	var center:Quad;
 
 	/**
 	 * A state machine plugged as a `Component` to `Player` using `PlayerState`
@@ -69,13 +70,9 @@ class Player extends TaggedSprite {
 
 		machine.state = DEFAULT;
 
-		scale(2);
-
 		gravity(0, 0);
 
 		bindInput();
-
-		center = new Quad();
 
 		onCollide(this, (v1, v2) -> {
 			trace('player colliding');
@@ -125,7 +122,6 @@ class Player extends TaggedSprite {
 	}
 
 	function DEFAULT_update(dt:Float) {
-		center.pos(x, y);
 		handleInput(dt);
 	}
 

@@ -1,6 +1,9 @@
+package components;
+
 import ceramic.Component;
 import ceramic.Entity;
 import ceramic.Visual;
+import game_utils.Tags;
 
 class TagsComponent extends Entity implements Component {
 	var tags:Map<Tags, Bool>;

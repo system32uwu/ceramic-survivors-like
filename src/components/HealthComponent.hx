@@ -1,3 +1,5 @@
+package components;
+
 import ceramic.Component;
 import ceramic.Entity;
 import ceramic.Timer;
