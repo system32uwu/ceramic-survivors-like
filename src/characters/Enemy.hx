@@ -80,33 +80,31 @@ class Enemy extends TaggedSprite {
 	override function update(dt:Float) {
 		// in order to avoid all enemies going to the exact same spot, we'll add a random offset to the player's position
 
-		if (!this.health.isDead()) {
-			var dx = player.x - x + playerPosOffsetX;
-			var dy = player.y - y + playerPosOffsetY;
+		var dx = player.x - x + playerPosOffsetX;
+		var dy = player.y - y + playerPosOffsetY;
 
-			dx = dx < 0 ? dx - player.width / 4 : dx + player.width / 4;
-			dy = dy < 0 ? dy - player.height / 4 : dy + player.height / 4;
+		dx = dx < 0 ? dx - player.width / 4 : dx + player.width / 4;
+		dy = dy < 0 ? dy - player.height / 4 : dy + player.height / 4;
 
-			var angle = Math.atan2(dy, dx);
+		var angle = Math.atan2(dy, dx);
 
-			velocityX = (Math.cos(angle) * 50) * randomXSpeed;
-			velocityY = (Math.sin(angle) * 50) * randomYSpeed;
+		velocityX = (Math.cos(angle) * 50) * randomXSpeed;
+		velocityY = (Math.sin(angle) * 50) * randomYSpeed;
 
-			scaleX = velocityX > 0 ? scaleFactor : -scaleFactor;
+		scaleX = velocityX > 0 ? scaleFactor : -scaleFactor;
 
-			// using dx and dy, calculate if the player is in range to be hit
-			// if so, attack
-			// if not, move towards player
-			if (Math.abs(dx) <= width + playerPosOffsetX && Math.abs(dy) <= height + playerPosOffsetY) {
-				// attack
-				velocityX = 0;
-				velocityY = 0;
-				animation = 'attack';
-			} else {
-				animation = 'run';
-			}
-
-			super.update(dt);
+		// using dx and dy, calculate if the player is in range to be hit
+		// if so, attack
+		// if not, move towards player
+		if (Math.abs(dx) <= width + playerPosOffsetX && Math.abs(dy) <= height + playerPosOffsetY) {
+			// attack
+			velocityX = 0;
+			velocityY = 0;
+			animation = 'attack';
+		} else {
+			animation = 'run';
 		}
+
+		super.update(dt);
 	}
 }
