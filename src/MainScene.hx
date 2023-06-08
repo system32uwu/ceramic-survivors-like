@@ -31,12 +31,12 @@ class MainScene extends Scene {
 		assets.texture(Images.ENEMY_1).filter = NEAREST;
 		assets.texture(Images.ENEMY_1V_2).filter = NEAREST;
 
-		initArcadePhysics();
-
 		start();
 	}
 
 	function start() {
+		initArcadePhysics();
+
 		initPlayer();
 
 		enemies = new Group<Enemy>();
@@ -48,6 +48,7 @@ class MainScene extends Scene {
 			enemy.x = width / 2 - 5 * i * xNegate;
 			enemy.y = player.y - 50 * i * yNegate;
 			enemies.add(enemy);
+			enemy.depth = -1;
 		}
 	}
 
@@ -56,6 +57,7 @@ class MainScene extends Scene {
 		player.x = width / 2;
 		player.y = height / 2;
 		add(player);
+		player.depth = 100;
 	}
 
 	override function update(dt:Float) {

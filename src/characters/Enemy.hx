@@ -93,7 +93,6 @@ class Enemy extends TaggedSprite {
 		velocityX = (Math.cos(angle) * 50) * randomXSpeed;
 		velocityY = (Math.sin(angle) * 50) * randomYSpeed;
 
-		trace(_dx);
 		scaleX = (velocityX > 1 && _dx > 1) ? scaleFactor : -scaleFactor;
 
 		// using dx and dy, calculate if the player is in range to be hit
