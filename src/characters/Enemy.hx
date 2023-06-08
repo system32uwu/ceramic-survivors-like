@@ -80,7 +80,9 @@ class Enemy extends TaggedSprite {
 	override function update(dt:Float) {
 		// in order to avoid all enemies going to the exact same spot, we'll add a random offset to the player's position
 
-		var dx = player.x - x + playerPosOffsetX;
+		var _dx = player.x - x + playerPosOffsetX;
+
+		var dx = _dx;
 		var dy = player.y - y + playerPosOffsetY;
 
 		dx = dx < 0 ? dx - player.width / 4 : dx + player.width / 4;
@@ -91,7 +93,8 @@ class Enemy extends TaggedSprite {
 		velocityX = (Math.cos(angle) * 50) * randomXSpeed;
 		velocityY = (Math.sin(angle) * 50) * randomYSpeed;
 
-		scaleX = velocityX > 0 ? scaleFactor : -scaleFactor;
+		trace(_dx);
+		scaleX = (velocityX > 1 && _dx > 1) ? scaleFactor : -scaleFactor;
 
 		// using dx and dy, calculate if the player is in range to be hit
 		// if so, attack
