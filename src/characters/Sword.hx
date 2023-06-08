@@ -2,16 +2,20 @@ package characters;
 
 import ceramic.Assets;
 import ceramic.SpriteSheet;
+import components.KnockbackComponent;
 import game_utils.*;
 
 class Sword extends TaggedSprite {
 	var rotator:RotatorCenter;
+
+	@component public var knockback:KnockbackComponent;
 
 	// var collider:Quad;
 
 	public function new(assets:Assets, rotator:RotatorCenter, scene:MainScene, debug:Bool = false) {
 		super([Tags.PlayerWeapon], 0, 1, debug);
 		this.rotator = rotator;
+		this.knockback = new KnockbackComponent(2);
 
 		sheet = new SpriteSheet();
 		sheet.texture = assets.texture(Images.PIRATE_MAIN_WEAPON);
@@ -31,7 +35,7 @@ class Sword extends TaggedSprite {
 			if (v2 is Enemy) {
 				var enemy:Enemy = cast v2;
 
-				var wasHit = enemy.takeDamage(true, this.damage.value);
+				var wasHit = enemy.takeDamage(true, this.damage.value, this.knockback.value);
 
 				if (wasHit && enemy.health.isDead()) {
 					enemy.dispose();

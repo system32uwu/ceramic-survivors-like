@@ -15,9 +15,12 @@ abstract class TaggedSprite extends Sprite {
 
 	var collider:Quad;
 
+	var debug:Bool = false;
+
 	public function new(tags:Array<Tags>, maxHealth:Float, damage:Float, debug:Bool = false) {
 		super();
 		scale(scaleFactor, scaleFactor);
+		this.debug = debug;
 		this.tags = new TagsComponent(tags);
 		this.health = new HealthComponent(maxHealth);
 		this.damage = new DamageComponent(damage);

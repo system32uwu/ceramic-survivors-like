@@ -87,6 +87,7 @@ class Player extends TaggedSprite {
 
 		mainWeapon = new Sword(this.scene.assets, this.rotatorCenter, this.scene);
 		scene.add(mainWeapon);
+		mainWeapon.depth = 1;
 	}
 
 	function initRotatorCenter() {

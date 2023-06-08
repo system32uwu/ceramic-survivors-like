@@ -17,6 +17,8 @@ class Enemy extends TaggedSprite {
 	var minYSpeed:Float = 1;
 	var maxXSpeed:Float = 1.6;
 	var maxYSpeed:Float = 1.8;
+	var currentKnockbackX:Float = 0;
+	var currentKnockbackY:Float = 0;
 
 	public function new(assets:Assets, player:Player, debug:Bool = false) {
 		super([Tags.Enemy], 3, 0, debug);
@@ -61,15 +63,20 @@ class Enemy extends TaggedSprite {
 		randomYSpeed = (Math.random() + 1 * maxYSpeed);
 	}
 
-	public function takeDamage(fromMainWeapon:Bool, damage:Float) {
+	public function takeDamage(fromMainWeapon:Bool, damage:Float, knockback:Float) {
 		var hit = this.health.takeDamage(fromMainWeapon, damage);
 
 		if (hit) {
-			this.tween(QUAD_EASE_IN, 1, 0, 1, (v1, v2) -> {
-				if (v1 < 1) {
-					this.quad.color = Color.RED;
-				} else {
-					this.quad.color = Color.WHITE;
+			this.tween(QUAD_EASE_IN, this.health.mainWeaponHitDuration / 3, 0.8, 1, (v1, v2) -> {
+				this.quad.alpha = v1;
+				this.quad.color = v1 < 0.95 ? Color.RED : Color.WHITE;
+
+				currentKnockbackX = (Math.random() * knockback) * -1;
+				currentKnockbackY = (Math.random() * knockback) * -1;
+
+				if (v2 == this.health.mainWeaponHitDuration / 3) {
+					currentKnockbackX = 0;
+					currentKnockbackY = 0;
 				}
 			});
 		}
@@ -79,7 +86,6 @@ class Enemy extends TaggedSprite {
 
 	override function update(dt:Float) {
 		// in order to avoid all enemies going to the exact same spot, we'll add a random offset to the player's position
-
 		var _dx = player.x - x + playerPosOffsetX;
 
 		var dx = _dx;
@@ -89,11 +95,10 @@ class Enemy extends TaggedSprite {
 		dy = dy < 0 ? dy - player.height / 4 : dy + player.height / 4;
 
 		var angle = Math.atan2(dy, dx);
+		velocityX = (Math.cos(angle) * 50) * randomXSpeed * (currentKnockbackX != 0 ? currentKnockbackX : 1);
+		velocityY = (Math.sin(angle) * 50) * randomYSpeed * (currentKnockbackY != 0 ? currentKnockbackX : 1);
 
-		velocityX = (Math.cos(angle) * 50) * randomXSpeed;
-		velocityY = (Math.sin(angle) * 50) * randomYSpeed;
-
-		scaleX = (velocityX > 1 && _dx > 1) ? scaleFactor : -scaleFactor;
+		scaleX = ((velocityX > 1 && _dx > 1) ? scaleFactor : -scaleFactor);
 
 		// using dx and dy, calculate if the player is in range to be hit
 		// if so, attack
