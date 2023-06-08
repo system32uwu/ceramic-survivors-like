@@ -1,0 +1,1 @@
+ceramic clay build android --no-colors --setup --archs armv7,arm64

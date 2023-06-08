@@ -31,7 +31,7 @@ class Sword extends TaggedSprite {
 			if (v2 is Enemy) {
 				var enemy:Enemy = cast v2;
 
-				var wasHit = enemy.takeDamange(true, this.damage.value);
+				var wasHit = enemy.takeDamage(true, this.damage.value);
 
 				if (wasHit && enemy.health.isDead()) {
 					enemy.dispose();
