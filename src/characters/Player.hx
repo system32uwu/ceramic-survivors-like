@@ -30,12 +30,11 @@ enum abstract PlayerInput(Int) {
 class Player extends TaggedSprite {
 	public var inputMap = new InputMap<PlayerInput>();
 
-	var moveSpeed:Float = 120;
+	var moveSpeed:Float = 180;
 	var scene:MainScene;
 	var rotatorCenter:RotatorCenter;
 
 	public var mainWeapon:Sword;
-	public var lastRegisteredPostion:{x:Float, y:Float} = {x: 0, y: 0};
 
 	/**
 	 * A state machine plugged as a `Component` to `Player` using `PlayerState`
@@ -169,18 +168,8 @@ class Player extends TaggedSprite {
 			velocityY /= 1.4;
 		}
 
-		x += velocityX * dt;
-		y += velocityY * dt;
-
 		if (velocityX != 0) {
 			scaleX = velocityX > 0 ? scaleFactor : -scaleFactor;
-		}
-
-		if (velocityX != 0 || velocityY != 0) {
-			lastRegisteredPostion = {
-				x: x,
-				y: y
-			};
 		}
 	}
 }

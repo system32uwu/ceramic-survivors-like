@@ -18,11 +18,11 @@ class Project extends Entity {
 
 		settings.antialiasing = 0;
 		settings.background = Color.BLACK;
-		settings.targetWidth = 640;
-		settings.targetHeight = 480;
+		settings.targetWidth = 1920;
+		settings.targetHeight = 1080;
 		settings.scaling = FIT;
 		settings.resizable = true;
-		settings.fullscreen = false;
+		settings.fullscreen = true;
 
 		app.onceReady(this, ready);
 	}

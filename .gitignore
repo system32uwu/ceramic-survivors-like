@@ -2,5 +2,5 @@
 .haxelib
 /out
 /completion.hxml
-/project
+project
 /gen
