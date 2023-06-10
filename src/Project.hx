@@ -18,12 +18,13 @@ class Project extends Entity {
 
 		settings.antialiasing = 0;
 		settings.background = Color.BLACK;
-		settings.targetWidth = 1920;
-		settings.targetHeight = 1080;
-		settings.scaling = FIT;
+		settings.targetWidth = 800;
+		settings.targetHeight = 600;
+		settings.windowWidth = 1920;
+		settings.windowHeight = 1080;
+		settings.scaling = FIT_RESIZE;
 		settings.resizable = true;
 		settings.fullscreen = true;
-
 		app.onceReady(this, ready);
 	}
 
@@ -31,7 +32,6 @@ class Project extends Entity {
 		setupResolution();
 		// Set MainScene as the current scene (see MainScene.hx)
 		app.scenes.main = new MainScene();
-
 		bindInput();
 	}
 
@@ -44,23 +44,17 @@ class Project extends Entity {
 		inputMap.onKeyDown(this, (k) -> {
 			if (k == ProjectInput.RESTART) {
 				var scene:MainScene = cast app.scenes.main;
-				scene.restart();
+				scene.player.inputMap.unbindEvents();
+				scene.dispose();
+
+				app.scenes.main = new MainScene();
 			}
 		});
 	}
 
 	function setupResolution() {
-		// Render as low resolution / pixel art,
-		// But with a larger grid so that we get smoother scroll
 		var pixelArt = new PixelArt();
-		pixelArt.sharpness = 1.0;
-		function pixelArtLayout() {
-			var scale:Float = Math.floor(Math.min(Math.min(screen.nativeWidth * screen.nativeDensity / screen.width,
-				screen.nativeHeight * screen.nativeDensity / screen.height), 4.0));
-			pixelArt.size(Math.round(screen.width * scale), Math.round(screen.height * scale));
-		}
-		screen.onResize(this, pixelArtLayout);
-		pixelArtLayout();
+		pixelArt.bindToScreenSize();
 		app.scenes.filter = pixelArt;
 	}
 }

@@ -1,22 +1,26 @@
 package;
 
 import ceramic.Camera;
+import ceramic.Color;
 import ceramic.Group;
 import ceramic.Scene;
+import ceramic.Text;
 import ceramic.Tilemap;
 import characters.*;
 
 using ceramic.TilemapPlugin;
 
 class MainScene extends Scene {
-	var player:Player;
+	public var player:Player;
 
 	public var enemies:Group<Enemy>;
 
 	var ltdkName = Tilemaps.LEVEL;
 	var camera:Camera;
 
-	var tilemap:Tilemap = null;
+	public var tilemap:Tilemap = null;
+
+	var fpsText:Text;
 
 	override function preload() {
 		assets.add(Images.HERO);
@@ -26,40 +30,25 @@ class MainScene extends Scene {
 		assets.add(ltdkName);
 	}
 
-	public function restart() {
-		player.mainWeapon.destroy();
-		player.inputMap.unbindEvents();
-		player.destroy();
-		enemies.destroy();
-		camera.destroy();
-
-		start();
-	}
-
 	override function create() {
 		assets.texture(Images.HERO).filter = NEAREST;
 		assets.texture(Images.PIRATE_MAIN_WEAPON).filter = NEAREST;
 		assets.texture(Images.ENEMY_1).filter = NEAREST;
 		assets.texture(Images.ENEMY_1V_2).filter = NEAREST;
 
+		fpsText = new Text();
+		fpsText.color = Color.WHITE;
+		fpsText.pointSize = 28;
+		fpsText.anchor(0.5, 0.5);
+		fpsText.pos(20, 20);
+
 		start();
 	}
 
 	function start() {
 		initArcadePhysics();
-		initPlayer();
 
 		enemies = new Group<Enemy>();
-		for (i in 0...200) {
-			var xNegate = Math.random() > 0.5 ? 1 : -1;
-			var yNegate = Math.random() > 0.5 ? 1 : -1;
-
-			var enemy = new Enemy(assets, this.player);
-			enemy.x = width / 2 - 5 * i * xNegate;
-			enemy.y = player.y - 50 * i * yNegate;
-			enemies.add(enemy);
-			enemy.depth = 90;
-		}
 
 		if (tilemap == null) {
 			var ldtkData = assets.ldtk(ltdkName);
@@ -73,25 +62,49 @@ class MainScene extends Scene {
 			});
 		}
 
+		tilemap.initArcadePhysics();
+		initPlayer();
+		initEnemies();
+
 		app.arcade.autoUpdateWorldBounds = false;
 		app.arcade.world.setBounds(0, 0, tilemap.width, tilemap.height);
 
 		initCamera();
 	}
 
+	function initEnemies() {
+		for (i in 0...20) {
+			var xNegate = Math.random() > 0.5 ? 1 : -1;
+			var yNegate = Math.random() > 0.5 ? 1 : -1;
+
+			var enemy = new Enemy(assets, this.player);
+			enemy.x = width / 2 - 5 * i * xNegate;
+			enemy.y = player.y - 50 * i * yNegate;
+			tilemap.add(enemy);
+			enemy.depth = 90;
+		}
+	}
+
 	function initPlayer() {
 		player = new Player(assets, this);
 		player.x = width / 2;
 		player.y = height / 2;
-		add(player);
+		tilemap.add(player);
 		player.depth = 100;
 	}
 
 	override function update(dt:Float) {
 		super.update(dt);
 
-		arcade.world.collide(player, enemies);
-		arcade.world.collide(player.mainWeapon, enemies);
+		arcade.world.collide(player, enemies, (b1, b2) -> {
+			trace('player, enemies', b1, b2);
+		});
+		arcade.world.collide(player.mainWeapon, enemies, (b1, b2) -> {
+			trace('sworda enemies', b1, b2);
+		});
+		fpsText.content = Std.string(app.computedFps);
+
+		fpsText.color = app.computedFps < 55 ? Color.RED : Color.WHITE;
 	}
 
 	function initCamera() {
@@ -100,12 +113,22 @@ class MainScene extends Scene {
 
 		// We tweak some camera settings to make it work
 		// better with our low-res pixel art display
-		// camera.movementThreshold = 0.5;
+		camera.movementThreshold = 0.5;
 		camera.trackSpeedX = 80;
 		camera.trackSpeedY = 80;
+
 		camera.trackCurve = 0.3;
-		// camera.zoom = 10;
 		// camera.brakeNearBounds(0, 0);
+
+		// Tell the camera what is the size of the viewport
+		camera.viewportWidth = width;
+		camera.viewportHeight = height;
+
+		// Tell the camera what is the size and position of the content
+		camera.contentX = 0;
+		camera.contentY = 0;
+		camera.contentWidth = tilemap.tilemapData.width;
+		camera.contentHeight = tilemap.tilemapData.height;
 
 		// We update the camera after everything else has been updated
 		// so that we are sure it won't be based on some intermediate state
@@ -117,16 +140,6 @@ class MainScene extends Scene {
 	}
 
 	function updateCamera(delta:Float) {
-		// Tell the camera what is the size of the viewport
-		camera.viewportWidth = width;
-		camera.viewportHeight = height;
-
-		// Tell the camera what is the size and position of the content
-		camera.contentX = 0;
-		camera.contentY = 0;
-		camera.contentWidth = tilemap.tilemapData.width;
-		camera.contentHeight = tilemap.tilemapData.height;
-
 		// Tell the camera what position to target (the player's position)
 		camera.followTarget = true;
 		camera.targetX = player.x;
