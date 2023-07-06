@@ -3,6 +3,7 @@ package characters;
 import ceramic.Assets;
 import ceramic.Color;
 import ceramic.SpriteSheet;
+import ceramic.Timer;
 import game_utils.TaggedSprite;
 import game_utils.Tags;
 
@@ -20,8 +21,15 @@ class Enemy extends TaggedSprite {
 	var currentKnockbackX:Float = 0;
 	var currentKnockbackY:Float = 0;
 
+	var angle:Float = 0;
+	var _dx:Float = 0;
+	var dx:Float = 0;
+	var dy:Float = 0;
+
+	var lastPathCalculation:Float = 0;
+
 	public function new(assets:Assets, player:Player, debug:Bool = false) {
-		super([Tags.Enemy], 3, 0, debug);
+		super([Tags.Enemy], 3, 0, 3, debug);
 		initArcadePhysics();
 		this.player = player;
 
@@ -84,19 +92,28 @@ class Enemy extends TaggedSprite {
 		return hit;
 	}
 
-	override function update(dt:Float) {
+	function makePath() {
 		// in order to avoid all enemies going to the exact same spot, we'll add a random offset to the player's position
-		var _dx = player.x - x + playerPosOffsetX;
+		_dx = player.x - x + playerPosOffsetX;
 
-		var dx = _dx;
-		var dy = player.y - y + playerPosOffsetY;
+		dx = _dx;
+		dy = player.y - y + playerPosOffsetY;
 
 		dx = dx < 0 ? dx - player.width / 4 : dx + player.width / 4;
 		dy = dy < 0 ? dy - player.height / 4 : dy + player.height / 4;
 
-		var angle = Math.atan2(dy, dx);
+		angle = Math.atan2(dy, dx);
+
+		this.lastPathCalculation = Timer.now;
+	}
+
+	override function update(dt:Float) {
+		if (Timer.now >= this.lastPathCalculation + 0.25) {
+			makePath();
+		}
+
 		velocityX = (Math.cos(angle) * 50) * randomXSpeed * (currentKnockbackX != 0 ? currentKnockbackX : 1);
-		velocityY = (Math.sin(angle) * 50) * randomYSpeed * (currentKnockbackY != 0 ? currentKnockbackX : 1);
+		velocityY = (Math.sin(angle) * 50) * randomYSpeed * (currentKnockbackY != 0 ? currentKnockbackY : 1);
 
 		scaleX = ((velocityX > 1 && _dx > 1) ? scaleFactor : -scaleFactor);
 
@@ -105,8 +122,8 @@ class Enemy extends TaggedSprite {
 		// if not, move towards player
 		if (Math.abs(dx) <= width + playerPosOffsetX && Math.abs(dy) <= height + playerPosOffsetY) {
 			// attack
-			velocityX = 0;
-			velocityY = 0;
+			velocityX /= 1000;
+			velocityY /= 1000;
 			animation = 'attack';
 		} else {
 			animation = 'run';

@@ -6,6 +6,6 @@
         "**/tmp": true,
         "**/out": true
     },
-    "haxe.executable": "../../ceramic/tools/haxe",
-    "haxelib.executable": "../../ceramic/tools/haxelib"
+    "haxe.executable": "../../../ceramic/tools/haxe.cmd",
+    "haxelib.executable": "../../../ceramic/tools/haxelib.cmd"
 }

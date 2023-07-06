@@ -22,6 +22,8 @@ class MainScene extends Scene {
 
 	var fpsText:Text;
 
+	var globalDebug = false;
+
 	override function preload() {
 		assets.add(Images.HERO);
 		assets.add(Images.PIRATE_MAIN_WEAPON);
@@ -36,19 +38,23 @@ class MainScene extends Scene {
 		assets.texture(Images.ENEMY_1).filter = NEAREST;
 		assets.texture(Images.ENEMY_1V_2).filter = NEAREST;
 
+		start();
+
+		if (globalDebug) {
+			initDebugFps();
+		}
+	}
+
+	function initDebugFps() {
 		fpsText = new Text();
 		fpsText.color = Color.WHITE;
 		fpsText.pointSize = 28;
 		fpsText.anchor(0.5, 0.5);
 		fpsText.pos(20, 20);
-
-		start();
 	}
 
 	function start() {
-		initArcadePhysics();
-
-		enemies = new Group<Enemy>();
+		initArcadePhysics(app.arcade.world);
 
 		if (tilemap == null) {
 			var ldtkData = assets.ldtk(ltdkName);
@@ -60,9 +66,12 @@ class MainScene extends Scene {
 				tilemap.tilemapData = level.ceramicTilemap;
 				add(tilemap);
 			});
+
+			tilemap.initArcadePhysics(app.arcade.world);
 		}
 
-		tilemap.initArcadePhysics();
+		enemies = new Group<Enemy>();
+
 		initPlayer();
 		initEnemies();
 
@@ -73,38 +82,48 @@ class MainScene extends Scene {
 	}
 
 	function initEnemies() {
-		for (i in 0...20) {
+		for (i in 0...100) {
 			var xNegate = Math.random() > 0.5 ? 1 : -1;
 			var yNegate = Math.random() > 0.5 ? 1 : -1;
 
-			var enemy = new Enemy(assets, this.player);
+			var enemy = new Enemy(assets, this.player, this.globalDebug);
 			enemy.x = width / 2 - 5 * i * xNegate;
 			enemy.y = player.y - 50 * i * yNegate;
+			addDebug(enemy);
+			enemies.add(enemy);
 			tilemap.add(enemy);
 			enemy.depth = 90;
 		}
 	}
 
+	function addDebug(obj) {
+		if (obj?.debug) {
+			tilemap.add(obj.collider);
+		}
+	}
+
 	function initPlayer() {
-		player = new Player(assets, this);
+		player = new Player(assets, this, this.globalDebug);
 		player.x = width / 2;
 		player.y = height / 2;
 		tilemap.add(player);
+		tilemap.add(player.rotatorCenter);
+		tilemap.add(player.mainWeapon);
+		addDebug(player);
+		addDebug(player.mainWeapon);
 		player.depth = 100;
 	}
 
 	override function update(dt:Float) {
 		super.update(dt);
 
-		arcade.world.collide(player, enemies, (b1, b2) -> {
-			trace('player, enemies', b1, b2);
-		});
-		arcade.world.collide(player.mainWeapon, enemies, (b1, b2) -> {
-			trace('sworda enemies', b1, b2);
-		});
-		fpsText.content = Std.string(app.computedFps);
+		tilemap.arcade.world.collide(player, enemies);
+		tilemap.arcade.world.collide(player.mainWeapon, enemies);
 
-		fpsText.color = app.computedFps < 55 ? Color.RED : Color.WHITE;
+		if (globalDebug) {
+			fpsText.content = Std.string(app.computedFps);
+			fpsText.color = app.computedFps < 55 ? Color.RED : Color.WHITE;
+		}
 	}
 
 	function initCamera() {

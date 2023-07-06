@@ -10,19 +10,21 @@ abstract class TaggedSprite extends Sprite {
 	@component public var tags:TagsComponent;
 	@component public var health:HealthComponent;
 	@component public var damage:DamageComponent;
+	@component public var knockback:KnockbackComponent;
 
 	var scaleFactor:Float = 2.0;
 
-	var collider:Quad;
+	public var collider:Quad;
 
-	var debug:Bool = false;
+	public var debug:Bool = false;
 
-	public function new(tags:Array<Tags>, maxHealth:Float, damage:Float, debug:Bool = false) {
+	public function new(tags:Array<Tags>, maxHealth:Float, damage:Float, knockback:Float, debug:Bool = false) {
 		super();
 		scale(scaleFactor, scaleFactor);
 		this.debug = debug;
 		this.tags = new TagsComponent(tags);
 		this.health = new HealthComponent(maxHealth);
+		this.knockback = new KnockbackComponent(knockback);
 		this.damage = new DamageComponent(damage);
 
 		size(width * scaleFactor, height * scaleFactor);
@@ -33,6 +35,7 @@ abstract class TaggedSprite extends Sprite {
 
 			collider.x = x;
 			collider.y = y;
+			collider.depth = 200;
 		}
 
 		onDestroy(null, (v) -> {

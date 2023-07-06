@@ -8,14 +8,11 @@ import game_utils.*;
 class Sword extends TaggedSprite {
 	var rotator:RotatorCenter;
 
-	@component public var knockback:KnockbackComponent;
-
 	// var collider:Quad;
 
 	public function new(assets:Assets, rotator:RotatorCenter, debug:Bool = false) {
-		super([Tags.PlayerWeapon], 0, 1, debug);
+		super([Tags.PlayerWeapon], 0, 1, 2, debug);
 		this.rotator = rotator;
-		this.knockback = new KnockbackComponent(2);
 
 		sheet = new SpriteSheet();
 		sheet.texture = assets.texture(Images.PIRATE_MAIN_WEAPON);

@@ -16,10 +16,10 @@ class Project extends Entity {
 	function new(settings:InitSettings) {
 		super();
 
-		settings.antialiasing = 0;
+		settings.antialiasing = 1;
 		settings.background = Color.BLACK;
-		settings.targetWidth = 800;
-		settings.targetHeight = 600;
+		settings.targetWidth = 400;
+		settings.targetHeight = 350;
 		settings.windowWidth = 1920;
 		settings.windowHeight = 1080;
 		settings.scaling = FIT_RESIZE;

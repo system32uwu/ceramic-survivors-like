@@ -32,8 +32,8 @@ class Player extends TaggedSprite {
 
 	var moveSpeed:Float = 180;
 	var scene:MainScene;
-	var rotatorCenter:RotatorCenter;
 
+	public var rotatorCenter:RotatorCenter;
 	public var mainWeapon:Sword;
 
 	/**
@@ -47,7 +47,7 @@ class Player extends TaggedSprite {
 	@component var machine = new StateMachine<PlayerState>();
 
 	public function new(assets:Assets, scene:MainScene, debug:Bool = false) {
-		super([Tags.Player], 10, 0, debug);
+		super([Tags.Player], 10, 0, 0, debug);
 		this.scene = scene;
 
 		initArcadePhysics();
@@ -73,25 +73,19 @@ class Player extends TaggedSprite {
 
 		bindInput();
 
-		onCollide(this, (v1, v2) -> {
-			// trace('player colliding');
-		});
-
-		initSword();
-		depth = 100;
+		initSword(debug);
 	}
 
-	function initSword() {
+	function initSword(debug:Bool = false) {
 		initRotatorCenter();
 
-		mainWeapon = new Sword(this.scene.assets, this.rotatorCenter);
-		scene.tilemap.add(mainWeapon);
+		mainWeapon = new Sword(this.scene.assets, this.rotatorCenter, debug);
 		mainWeapon.depth = 100;
 	}
 
 	function initRotatorCenter() {
 		rotatorCenter = new RotatorCenter(this);
-		scene.tilemap.add(rotatorCenter);
+		// scene.tilemap.add(rotatorCenter);
 	}
 
 	function bindInput() {
@@ -121,6 +115,8 @@ class Player extends TaggedSprite {
 		// Update sprite
 		super.update(dt);
 	}
+
+	public function updatePhysics(dt:Float) {}
 
 	function DEFAULT_update(dt:Float) {
 		handleInput(dt);
